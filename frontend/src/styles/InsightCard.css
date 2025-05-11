@@ -1,0 +1,56 @@
+.insight-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 1rem;
+    max-width: 340px;
+    min-width: 280px;
+    margin-left: 1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transform-style: preserve-3d;
+    cursor: pointer;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+  .insight-card:hover {
+    transform: perspective(800px) rotateX(3deg) rotateY(-3deg);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+  }
+  
+  .insight-card.collapsed .insight-content {
+    max-height: 100px;
+    overflow: hidden;
+  }
+  
+  .insight-card.expanded .insight-content {
+    max-height: 1000px;
+    overflow: auto;
+  }
+  
+  .toggle-btn {
+    background: #00b0f0;
+    border: none;
+    color: white;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    margin-bottom: 0.75rem;
+    align-self: flex-start;
+    transition: background 0.2s ease;
+  }
+  
+  .toggle-btn:hover {
+    background: #008cd2;
+  }
+  
+  .insight-content {
+    font-size: 0.85rem;
+    color: #374151;
+    line-height: 1.4;
+  }
+  
