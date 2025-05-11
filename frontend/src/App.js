@@ -27,7 +27,7 @@ export default function App() {
     form.append("file", file);
 
     try {
-      const res = await fetch("http://127.0.0.1:5050/upload", {
+      const res = await fetch("https://ai-powered-data-analyst-backend.onrender.com/upload", {
         method: "POST",
         body: form,
       });
@@ -46,7 +46,7 @@ export default function App() {
   };
 
   const handleChatPrompt = async (prompt) => {
-    const res = await fetch("http://127.0.0.1:5050/chat", {
+    const res = await fetch("https://ai-powered-data-analyst-backend.onrender.com/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ prompt, data: dashSpec?.data }),
