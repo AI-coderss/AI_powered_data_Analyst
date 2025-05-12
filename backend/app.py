@@ -12,7 +12,10 @@ load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "https://ai-powered-data-analyst-dsah.onrender.com"}})
+CORS(app, resources={r"/*": {"origins": [
+    "http://localhost:3000",
+    "https://ai-powered-data-analyst-dsah.onrender.com"
+]}})
 
 
 UPLOAD_FOLDER = 'uploads'
@@ -70,4 +73,4 @@ Give a markdown summary of insights based on the data and the question.
 
 
 if __name__ == "__main__":
-     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5050)), threaded=True)
+    app.run(host="127.0.0.1", port=5050, debug=True)

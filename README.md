@@ -1,70 +1,168 @@
-# Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 📊 AI-Powered Data Insight Platform
 
-## Available Scripts
+A multi-agent system that transforms raw data into **actionable insights and dynamic visualizations**, powered by OpenAI’s new **Agents SDK**, with a Flask backend and a React + Highcharts frontend.
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## 🧠 Architecture Overview
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### 🔧 Backend (Flask + OpenAI Agents SDK)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+| Component           | Description                                                                                          |
+| ------------------- | ---------------------------------------------------------------------------------------------------- |
+| `Flask`             | Web framework handling file uploads and API endpoints.                                               |
+| `OpenAI Agents SDK` | Enables orchestrated collaboration between multiple intelligent agents using `gpt-4o` and `o3-mini`. |
+| `pandas`            | Reads and parses `.csv`, `.xlsx` files into structured data.                                         |
+| `dotenv`            | Loads API keys securely from `.env` file.                                                            |
+| `Flask-CORS`        | Allows secure cross-origin requests from the frontend.                                               |
 
-### `npm test`
+### 🌐 Frontend (React + Highcharts)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+| Component        | Description                                                                                                 |
+| ---------------- | ----------------------------------------------------------------------------------------------------------- |
+| `React.js`       | UI framework used to build interactive views for data upload, AI-generated insights, and visual dashboards. |
+| `Highcharts.js`  | Renders visually rich, interactive data visualizations as JSON configs returned by the backend agents.      |
+| `react-dropzone` | Enables drag-and-drop uploads for files.                                                                    |
 
-### `npm run build`
+---
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## 🧩 Agents & Roles (OpenAI SDK)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+| Agent                 | Model     | Responsibilities                                                                                         |
+| --------------------- | --------- | -------------------------------------------------------------------------------------------------------- |
+| **Data Processor**    | `gpt-4o`  | Cleans and preprocesses the uploaded dataset: removes duplicates, fixes formats, handles missing values. |
+| **Data Analyst**      | `gpt-4o`  | Analyzes structured data, finds trends, patterns, anomalies, and returns structured findings.            |
+| **Visualization**     | `o3-mini` | Transforms analysis into **Highcharts JSON** configurations (bar, pie, column, line, etc.).              |
+| **Insight Generator** | `gpt-4o`  | Synthesizes insights and produces **Markdown summaries** with strategic recommendations.                 |
+| **Orchestrator**      | `gpt-4o`  | Coordinates handoffs between all agents, manages execution pipeline.                                     |
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+---
 
-### `npm run eject`
+## 🔁 App Logic Flow
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```mermaid
+graph TD;
+    A[User Uploads Dataset] --> B[Flask Receives File];
+    B --> C[pandas parses into JSON];
+    C --> D[Orchestrator Agent starts];
+    D --> E[Data Processor cleans];
+    E --> F[Data Analyst generates insights];
+    F --> G[Visualizer outputs Highcharts JSON];
+    G --> H[Insight Generator summarizes];
+    H --> I[Flask returns full response];
+    I --> J[React UI displays dashboard + markdown];
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+---
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## 📁 Folder Structure
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```
+bi_analyst/
+├── backend/
+│   ├── app.py
+│   ├── .env
+│   ├── orchestrator/
+│   │   └── workflow.py
+│   ├── agents/
+│   │   ├── __init__.py
+│   │   ├── data_processor.py
+│   │   ├── data_analyst.py
+│   │   ├── visualization.py
+│   │   └── insight_generator.py
+├── frontend/
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── Uploader.jsx
+│   │   │   ├── Dashboard.jsx
+│   │   │   ├── ChatInputWidget.jsx
+│   │   │   └── InsightPane.jsx
+│   │   └── App.js
+├── uploads/
+├── README.md
+```
 
-## Learn More
+---
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## 🚀 Setup Instructions
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### 1. Backend
 
-### Code Splitting
+```bash
+cd backend
+python -m venv venv
+source venv/bin/activate   # or venv\\Scripts\\activate on Windows
+pip install -r requirements.txt
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+📄 `.env` file:
 
-### Analyzing the Bundle Size
+```env
+OPENAI_API_KEY=sk-xxx
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Run the backend:
 
-### Making a Progressive Web App
+```bash
+python app.py
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+### 2. Frontend
 
-### Advanced Configuration
+```bash
+cd frontend
+npm install
+npm start
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+Ensure `proxy` is set in `frontend/package.json`:
 
-### Deployment
+```json
+"proxy": "http://127.0.0.1:5050"
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+---
 
-### `npm run build` fails to minify
+## 📬 Endpoints
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+| Route     | Method | Description                                                                          |
+| --------- | ------ | ------------------------------------------------------------------------------------ |
+| `/upload` | POST   | Uploads and processes a `.csv` or `.xlsx` dataset using the multi-agent AI pipeline. |
+| `/chat`   | POST   | Sends a follow-up question and receives new AI-generated markdown insights.          |
+
+---
+
+## 🛡️ Error Handling
+
+* Internal errors (500) log full tracebacks in the Flask terminal.
+* Frontend receives JSON error messages for display.
+
+---
+
+## 🌍 Technologies Used
+
+* **Python 3.11+**
+* **Flask**
+* **OpenAI Agents SDK** (May 2025)
+* **React.js**
+* **Highcharts.js**
+* **pandas**
+* **asyncio + event loop handling**
+
+---
+
+## ✨ Future Enhancements
+
+* Multi-language support (English / Arabic)
+* OAuth login for dataset privacy
+* Insights download as PDF or Word
+* Integration with database (PostgreSQL or MongoDB)
+
+---
+
+## 📜 License
+
+MIT License. © Mohammed Bahageel 2025
+
+
