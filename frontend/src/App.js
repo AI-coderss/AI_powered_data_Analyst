@@ -36,7 +36,9 @@ export default function App() {
       setDashSpec(result);
 
       setTimeout(() => {
-        document.getElementById("dashboard")?.scrollIntoView({ behavior: "smooth" });
+        document
+          .getElementById("dashboard")
+          ?.scrollIntoView({ behavior: "smooth" });
       }, 300);
     } catch (err) {
       console.error("Upload failed:", err);
@@ -72,7 +74,7 @@ export default function App() {
             dashSpec && (
               <DashboardTabs
                 charts={dashSpec.charts}
-                insights_md={chatInsights || dashSpec.insights_md}
+                insights_md={chatInsights || dashSpec.insights}
               />
             )
           )}
@@ -90,9 +92,3 @@ export default function App() {
     </div>
   );
 }
-
-
-
-
-
-

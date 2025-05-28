@@ -5,8 +5,14 @@ import os
 import pandas as pd
 import traceback
 import openai
+import json
 from dotenv import load_dotenv
-from helpers.chart_generator import generate_highcharts_and_insights
+# Import the agents
+from agent.data_processor import data_processor_agent
+from agent.data_analyst import data_analyst_agent
+from agent.visualization import visualization_agent
+from agent.insight_generator import insight_generator_agent
+from agents import Runner
 
 load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")
@@ -20,7 +26,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 @app.route("/upload", methods=["POST"])
-def upload_file():
+async def upload_file():
     if 'file' not in request.files:
         return jsonify({"error": "No file part"}), 400
 
@@ -38,12 +44,60 @@ def upload_file():
         else:
             return jsonify({"error": "Unsupported file format"}), 400
 
-        result = generate_highcharts_and_insights(df)
+        # Step 1: Process data with Data Processor agent
+        df_json = df.head(100).to_json(orient="records")
+        #print(df_json)
+
+        
+         # Run all the async agent processing steps
+        processed_data = await Runner.run(data_processor_agent, f"Clean and preprocess the following dataset: {df_json}")
+        
+        # # Step 2: Analyze data with Data Analyst agent
+        analysis = await Runner.run(data_analyst_agent, f"Analyze this processed dataset and provide insights: {processed_data}")
+        
+        # # Step 3: Generate visualizations with Visualization Specialist agent
+        visualizations = await Runner.run(visualization_agent, f"""
+                You are given a tabular dataset sample below. Your task is to:
+
+                1. Analyze the data thoroughly and suggest multiple Highcharts JS configurations in JSON format to cover every significant aspect of the data.
+                2. Make the charts interactive with features such as clickable points, drilldowns, zooming, and dynamic updates.
+                3. Ensure all charts use consistent categories where applicable (e.g., "Region", "Department") to allow cross-filtering between charts.
+                4. Include animations and interactive widgets to enhance user engagement.
+                5. Ensure proper alignment and responsive layout for embedding in a dashboard.
+
+                ### Dataset Sample:
+                {analysis}
+
+                ### Output format:
+                {{
+                "charts": [ ... ],   // list of Highcharts JSON config objects
+                }}
+
+                Respond ONLY with a pure JSON object. Do NOT include markdown, comments, or explanation.
+                """)
+        
+         # Step 4: Generate final insights with Insight Generator agent
+        insights = await Runner.run(insight_generator_agent, f"Generate insights and recommendations based on this data: \
+                     \nData: {processed_data}")
+        
+        
+
+        # Modified result to include both visualizations and insights
+        vis_data = json.loads(visualizations.final_output)
+        result = {
+            "charts": vis_data["charts"],
+            "insights": insights.final_output
+        }
+        
+
         return jsonify(result)
+        
+
 
     except Exception as e:
-        traceback.print_exc()  # <--- Add this to print the full error
+        traceback.print_exc()
         return jsonify({"error": str(e)}), 500
+
 @app.route("/chat", methods=["POST"])
 def chat_with_ai():
     data = request.json

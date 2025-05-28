@@ -1,56 +1,89 @@
 .insight-card {
-    background: #ffffff;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    padding: 1rem;
-    max-width: 340px;
-    min-width: 280px;
-    margin-left: 1rem;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    transform-style: preserve-3d;
-    cursor: pointer;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-  
-  .insight-card:hover {
-    transform: perspective(800px) rotateX(3deg) rotateY(-3deg);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
-  }
-  
-  .insight-card.collapsed .insight-content {
-    max-height: 100px;
-    overflow: hidden;
-  }
-  
-  .insight-card.expanded .insight-content {
-    max-height: 1000px;
-    overflow: auto;
-  }
-  
-  .toggle-btn {
-    background: #00b0f0;
-    border: none;
-    color: white;
-    padding: 6px 10px;
-    border-radius: 6px;
-    font-size: 0.85rem;
-    cursor: pointer;
-    margin-bottom: 0.75rem;
-    align-self: flex-start;
-    transition: background 0.2s ease;
-  }
-  
-  .toggle-btn:hover {
-    background: #008cd2;
-  }
-  
-  .insight-content {
-    font-size: 0.85rem;
-    color: #374151;
-    line-height: 1.4;
-  }
-  
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 1rem;
+  max-width: 1300px;
+  min-width: 400px;
+  margin-left: 1rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform-style: preserve-3d;
+  cursor: pointer;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.insight-card:hover {
+  transform: perspective(800px) rotateX(3deg) rotateY(-3deg);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+}
+
+.insight-content {
+  font-size: 0.85rem;
+  color: #374151;
+  line-height: 1.4;
+  max-height: 500px;
+  overflow: auto;
+}
+
+/* Updated heading styles with more controlled sizing */
+.insight-heading {
+  text-decoration: underline;
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+  text-align: center;
+  width: 100%;
+  /* margin-left: 1rem; */
+  /* padding-bottom: 29px; */
+}
+
+/* Specific heading sizes */
+.insight-content h1 {
+  padding-bottom: 20px;
+  margin-left: 1rem;
+  font-size: 1.6rem;
+}
+
+.insight-content h2 {
+  margin-left: 39rem;
+  padding-bottom: 29px;
+  font-size: 1rem;
+}
+
+.insight-content h3 {
+  font-size: 1.2rem;
+}
+
+.insight-content h4,
+.insight-content h5,
+.insight-content h6 {
+  font-size: 1rem;
+}
+
+.insight-list-item {
+  font-style: italic;
+  margin-bottom: 0.5rem;
+}
+
+.insight-bold {
+  font-weight: 700;
+  color: #1a365d;
+}
+
+/* General markdown styling */
+.insight-content ul,
+.insight-content ol {
+  padding-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.insight-content p {
+  margin-bottom: 1rem;
+}
+/* Add proper whitespace around markdown content */
+.insight-content {
+  padding: 0.5rem;
+}

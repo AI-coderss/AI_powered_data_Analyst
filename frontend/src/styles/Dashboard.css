@@ -1,48 +1,53 @@
 /* Dashboard.css */
 
 .dashboard-container {
-    max-height: 750px; /* Or adjust to fit your layout */
-    overflow-y: auto;
-    padding: 1rem;
-    margin-bottom: 45px;
-  }
-  
+  max-height: calc(
+    90vh - 250px
+  ); /* Adjusted to account for chat input and taskbar */
+  overflow-y: auto;
+  padding: 1rem;
+  margin-bottom: 120px; /* Increased to provide more space above the chat UI */
+}
+
+.chart-wrapper {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2 charts per row */
+  gap: 1.5rem;
+  padding: 16px;
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+}
+
+/* Make charts responsive */
+@media (max-width: 1200px) {
   .chart-wrapper {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr); /* 2 charts per row */
-    gap: 1.5rem;
-    padding: 16px;
-    background-color: #f9f9f9;
-    border-radius: 12px;
-    border: 1px solid #e5e7eb;
+    grid-template-columns: 1fr; /* 1 chart per row on smaller screens */
   }
-  
-  
-  .chart-title {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 16px;
-    color: #333;
-    text-align: center;
-  }
-  
-  
-  .file-upload {
-    margin-bottom: 20px;
-    text-align: center;
-  }
-  
-  .file-upload input[type="file"] {
-    padding: 10px;
-    border-radius: 8px;
-    border: 1px solid #d1d5db;
-    background-color: #f3f4f6;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .file-upload input[type="file"]:hover {
-    background-color: #e5e7eb;
-  }
-  
-  
+}
+
+.chart-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 16px;
+  color: #333;
+  text-align: center;
+}
+
+.file-upload {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.file-upload input[type="file"] {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  background-color: #f3f4f6;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.file-upload input[type="file"]:hover {
+  background-color: #e5e7eb;
+}
