@@ -12,6 +12,7 @@ from agent.data_processor import data_processor_agent
 from agent.data_analyst import data_analyst_agent
 from agent.visualization import visualization_agent
 from agent.insight_generator import insight_generator_agent
+from agent.supervisor_agent import supervisor_agent
 from agents import Runner
 
 load_dotenv()
@@ -24,6 +25,16 @@ CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
 UPLOAD_FOLDER = 'uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+# Add a global variable to store the latest processed data
+# This is a simple solution for development - for production, consider a database
+latest_processed_data = {
+    "raw_data": None,
+    "processed_data": None,
+    "analysis": None,
+    "charts": None,
+    "insights": None
+}
 
 @app.route("/upload", methods=["POST"])
 async def upload_file():
@@ -44,16 +55,17 @@ async def upload_file():
         else:
             return jsonify({"error": "Unsupported file format"}), 400
 
-        # Step 1: Process data with Data Processor agent
-        df_json = df.head(100).to_json(orient="records")
-        #print(df_json)
+        # Store the raw data
+        latest_processed_data["raw_data"] = df.head(100).to_json(orient="records")
+        df_json = latest_processed_data["raw_data"]
 
-        
-         # Run all the async agent processing steps
+        # Step 1: Process data with Data Processor agent
         processed_data = await Runner.run(data_processor_agent, f"Clean and preprocess the following dataset: {df_json}")
+        latest_processed_data["processed_data"] = processed_data
         
-        # # Step 2: Analyze data with Data Analyst agent
-        analysis = await Runner.run(data_analyst_agent, f"Analyze this processed dataset and provide insights: {processed_data}")
+        # Step 2: Analyze data with Data Analyst agent
+        analysis = await Runner.run(data_analyst_agent, f"Analyze this processed dataset and provide insights: {processed_data.final_output}")
+        latest_processed_data["analysis"] = analysis.final_output
         
         # # Step 3: Generate visualizations with Visualization Specialist agent
         visualizations = await Runner.run(visualization_agent, f"""
@@ -80,16 +92,21 @@ async def upload_file():
         insights = await Runner.run(insight_generator_agent, f"Generate insights and recommendations based on this data: \
                      \nData: {processed_data}")
         
-        
-
-        # Modified result to include both visualizations and insights
+        # Store the visualization data
         vis_data = json.loads(visualizations.final_output)
+        latest_processed_data["charts"] = vis_data["charts"]
+        
+        # Store the insights
+        latest_processed_data["insights"] = insights.final_output
+        
+        # Modified result to include both visualizations and insights
         result = {
             "charts": vis_data["charts"],
             "insights": insights.final_output
         }
-        
 
+        
+        
         return jsonify(result)
         
 
@@ -99,28 +116,56 @@ async def upload_file():
         return jsonify({"error": str(e)}), 500
 
 @app.route("/chat", methods=["POST"])
-def chat_with_ai():
-    data = request.json
-    prompt = data.get("prompt")
-    charts = data.get("charts")
+async def chat_with_ai():
+    try:
+        data = request.json
+        prompt = data.get("prompt")
+        
+        
+        
+        # If no data provided by client, use our stored data
+        dataset = latest_processed_data["analysis"]
+        visualizations = latest_processed_data["charts"]
+        insights = latest_processed_data["insights"]
+        #print("dataset", dataset)
 
-    message = f"""
-You are an AI BI analyst. A user asked:
-"{prompt}"
+            
+        # If we still don't have data, inform the user
+        if not dataset:
+            return jsonify({"response": "Please upload a dataset first or provide data in your request."}), 400
 
-The current dashboard charts are:
-{charts}
+        reply = await Runner.run(supervisor_agent, 
+                         f"""The current dashboard data is: {dataset}
+                         the current visualizations are: {visualizations}
+                         the current insights are: {insights}  
+                         the user prompt is: {prompt}
 
-Give a markdown summary of insights based on the data and the question.
-"""
+                         """)
+        print("reply", reply)
+        return jsonify({"response": reply.final_output})
+        # Use dataset in your prompt
+#         message = f"""
+# You are an AI BI analyst. A user asked:
+# "{prompt}"
 
-    response = openai.ChatCompletion.create(
-        model="gpt-4o",
-        messages=[{ "role": "user", "content": message }],
-        temperature=0.5,
-    )
-    reply = response.choices[0].message.content.strip()
-    return jsonify({ "response": reply })
+# The current dashboard data is:
+# {dataset}
+
+# Give a markdown summary of insights based on the data and the question.
+# """
+
+#         # New OpenAI API format (1.0.0+)
+#         client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+#         response = client.chat.completions.create(
+#             model="gpt-4o",
+#             messages=[{"role": "user", "content": message}],
+#             temperature=0.5,
+#         )
+#         reply = response.choices[0].message.content.strip()
+#         return jsonify({"response": reply})
+    except Exception as e:
+        print(f"Error in chat endpoint: {str(e)}")
+        return jsonify({"error": str(e)}), 500
 
 
 if __name__ == "__main__":
