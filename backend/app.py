@@ -143,26 +143,7 @@ async def chat_with_ai():
                          """)
         print("reply", reply)
         return jsonify({"response": reply.final_output})
-        # Use dataset in your prompt
-#         message = f"""
-# You are an AI BI analyst. A user asked:
-# "{prompt}"
 
-# The current dashboard data is:
-# {dataset}
-
-# Give a markdown summary of insights based on the data and the question.
-# """
-
-#         # New OpenAI API format (1.0.0+)
-#         client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-#         response = client.chat.completions.create(
-#             model="gpt-4o",
-#             messages=[{"role": "user", "content": message}],
-#             temperature=0.5,
-#         )
-#         reply = response.choices[0].message.content.strip()
-#         return jsonify({"response": reply})
     except Exception as e:
         print(f"Error in chat endpoint: {str(e)}")
         return jsonify({"error": str(e)}), 500
