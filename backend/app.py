@@ -14,6 +14,11 @@ from agent.visualization import visualization_agent
 from agent.insight_generator import insight_generator_agent
 from agent.supervisor_agent import supervisor_agent
 from agents import Runner
+from pydantic import BaseModel
+
+class Step(BaseModel):
+    type: str
+    output: str
 
 load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")
@@ -93,21 +98,18 @@ async def upload_file():
                      \nData: {processed_data}")
         
         # Store the visualization data
-        vis_data = json.loads(visualizations.final_output)
-        latest_processed_data["charts"] = vis_data["charts"]
+        charts_content = visualizations.final_output.content
+        charts_json = json.loads(charts_content)
+        latest_processed_data["charts"] = charts_json
         
         # Store the insights
-        latest_processed_data["insights"] = insights.final_output
+        latest_processed_data["insights"] = insights.final_output.content
         
-        # Modified result to include both visualizations and insights
-        result = {
-            "charts": vis_data["charts"],
-            "insights": insights.final_output
+        results = {
+            "charts": latest_processed_data["charts"],
+            "insights": latest_processed_data["insights"]
         }
-
-        
-        
-        return jsonify(result)
+        return jsonify(results)
         
 
 
@@ -121,15 +123,11 @@ async def chat_with_ai():
         data = request.json
         prompt = data.get("prompt")
         
-        
-        
         # If no data provided by client, use our stored data
         dataset = latest_processed_data["analysis"]
         visualizations = latest_processed_data["charts"]
         insights = latest_processed_data["insights"]
-        #print("dataset", dataset)
-
-            
+        
         # If we still don't have data, inform the user
         if not dataset:
             return jsonify({"response": "Please upload a dataset first or provide data in your request."}), 400
@@ -139,13 +137,19 @@ async def chat_with_ai():
                          the current visualizations are: {visualizations}
                          the current insights are: {insights}  
                          the user prompt is: {prompt}
-
-                         """)
+                        
+                        
+                         """
+                         )
         print("reply", reply)
-        return jsonify({"response": reply.final_output})
+        
+        
+        # Return both the type and reply to the frontend
+        return jsonify(reply.final_output)
 
     except Exception as e:
         print(f"Error in chat endpoint: {str(e)}")
+        traceback.print_exc()
         return jsonify({"error": str(e)}), 500
 
 
