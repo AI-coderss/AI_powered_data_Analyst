@@ -1,10 +1,13 @@
 from agents import Agent
+import json
 
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
 
 class Step(BaseModel):
     type: str
     content: str
+    
+   
 
 visualization_agent = Agent(
     name="Visualization Specialist",
@@ -15,10 +18,16 @@ Ensure each chart:
 - Has clear axis labels and categories
 - Supports tooltips, click interactions, and drilldowns
 - Highlights the insights clearly
+
+IMPORTANT: Your final output MUST be valid JSON. Do not include any explanatory text.
 Output a JSON list of valid Highcharts configuration objects.
-IMPORTANT: Always format your final response as a pydantic model:
+
+Your final response must be a pydantic model:
 type should be "charts"
-content should be the JSON list of valid Highcharts configuration objects.
+content should be ONLY the JSON list of valid Highcharts configuration objects.
+
+Example valid output format:
+{"type": "charts", "content": "[{\"chart\":{\"type\":\"bar\"},\"title\":{\"text\":\"Sample Chart\"},\"series\":[{\"data\":[1,2,3]}]}]"}
 """,
     model="o3-mini",
     output_type=Step

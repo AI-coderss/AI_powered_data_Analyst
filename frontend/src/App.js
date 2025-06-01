@@ -55,7 +55,19 @@ export default function App() {
     });
 
     const data = await res.json();
-    setChatInsights(data.response);
+    console.log("data type", data.type);
+    console.log("data content", data.content);
+    console.log("data reply", data.reply);
+    console.log("data", data);
+
+    if (data.type === "insights") {
+      setChatInsights(data.reply);
+    } else if (data.type === "charts") {
+      setDashSpec((prevDashSpec) => ({
+        ...prevDashSpec,
+        charts: data.reply,
+      }));
+    }
   };
 
   return (

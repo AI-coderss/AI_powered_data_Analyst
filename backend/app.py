@@ -141,11 +141,22 @@ async def chat_with_ai():
                         
                          """
                          )
-        print("reply", reply)
+        print("reply", reply.final_output.type)
+
+        #process output based on type
+        output = reply.final_output.content
+
+        if reply.final_output.type == "charts":
+            output = json.loads(output)
         
+        # Convert Pydantic model to dictionary before jsonifying
+        response_dict = {
+            "type": reply.final_output.type,
+            "reply": output
+        }
         
-        # Return both the type and reply to the frontend
-        return jsonify(reply.final_output)
+        # Return the dictionary instead of the Pydantic model
+        return jsonify(response_dict)
 
     except Exception as e:
         print(f"Error in chat endpoint: {str(e)}")
