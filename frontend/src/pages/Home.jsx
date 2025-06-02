@@ -11,7 +11,7 @@ const Home = () => {
     const formData = new FormData();
     formData.append("file", e.target.files[0]);
 
-    const res = await fetch("http://localhost:5000/upload", {
+    const res = await fetch("https://ai-powered-data-analyst-server.onrender.com/upload", {
       method: "POST",
       body: formData,
     });
