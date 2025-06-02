@@ -1,6 +1,6 @@
 import ReactMarkdown from "react-markdown";
 import "../styles/InsightCard.css";
-import remarkGfm from "remark-gfm";
+
 //import rehypeHighlight from "rehype-highlight";
 
 export default function InsightCard({ markdown }) {
@@ -55,7 +55,7 @@ export default function InsightCard({ markdown }) {
   return (
     <div className="insight-card expanded">
       <div className="insight-content">
-        <ReactMarkdown remarkPlugins={[remarkGfm]} components={components}>
+        <ReactMarkdown >
           {cleanMarkdown}
         </ReactMarkdown>
       </div>
