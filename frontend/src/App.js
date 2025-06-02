@@ -17,6 +17,7 @@ export default function App() {
   const [dashSpec, setDashSpec] = useState(null);
   const [chatInsights, setChatInsights] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isChatLoading, setIsChatLoading] = useState(false);
 
   const handleUpload = async (file) => {
     setIsLoading(true);
@@ -48,25 +49,33 @@ export default function App() {
   };
 
   const handleChatPrompt = async (prompt) => {
-    const res = await fetch("http://127.0.0.1:5050/chat", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ prompt, data: dashSpec?.data }),
-    });
+    setIsChatLoading(true);
 
-    const data = await res.json();
-    console.log("data type", data.type);
-    console.log("data content", data.content);
-    console.log("data reply", data.reply);
-    console.log("data", data);
+    try {
+      const res = await fetch("http://127.0.0.1:5050/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt, data: dashSpec?.data }),
+      });
 
-    if (data.type === "insights") {
-      setChatInsights(data.reply);
-    } else if (data.type === "charts") {
-      setDashSpec((prevDashSpec) => ({
-        ...prevDashSpec,
-        charts: data.reply,
-      }));
+      const data = await res.json();
+      console.log("data type", data.type);
+      console.log("data content", data.content);
+      console.log("data reply", data.reply);
+      console.log("data", data);
+
+      if (data.type === "insights") {
+        setChatInsights(data.reply);
+      } else if (data.type === "charts") {
+        setDashSpec((prevDashSpec) => ({
+          ...prevDashSpec,
+          charts: data.reply,
+        }));
+      }
+    } catch (err) {
+      console.error("Chat request failed:", err);
+    } finally {
+      setIsChatLoading(false);
     }
   };
 
@@ -80,7 +89,7 @@ export default function App() {
         </aside>
 
         <section className="content" id="dashboard">
-          {isLoading ? (
+          {isLoading || isChatLoading ? (
             <Loader isLoading={true} />
           ) : (
             dashSpec && (
@@ -95,10 +104,16 @@ export default function App() {
 
       <div className="bottom-bar">
         <div className="chat-wrapper">
-          <ChatInputWidget onSendMessage={handleChatPrompt} />
+          <ChatInputWidget
+            onSendMessage={handleChatPrompt}
+            disabled={isChatLoading}
+          />
         </div>
         <div className="uploader-wrapper">
-          <Uploader onFile={handleUpload} />
+          <Uploader
+            onFile={handleUpload}
+            disabled={isLoading || isChatLoading}
+          />
         </div>
       </div>
     </div>
