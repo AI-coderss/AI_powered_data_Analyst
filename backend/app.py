@@ -24,7 +24,7 @@ load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
+CORS(app, resources={r"/*": {"origins": "https://ai-powered-data-analyst-2l0a.onrender.com"}})
 
 
 UPLOAD_FOLDER = 'uploads'
