@@ -28,10 +28,13 @@ export default function App() {
     form.append("file", file);
 
     try {
-      const res = await fetch("http://127.0.0.1:5050/upload", {
-        method: "POST",
-        body: form,
-      });
+      const res = await fetch(
+        "https://ai-powered-data-analyst-1.onrender.com/upload",
+        {
+          method: "POST",
+          body: form,
+        }
+      );
 
       const result = await res.json();
       setDashSpec(result);
@@ -52,11 +55,14 @@ export default function App() {
     setIsChatLoading(true);
 
     try {
-      const res = await fetch("http://127.0.0.1:5050/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt, data: dashSpec?.data }),
-      });
+      const res = await fetch(
+        "https://ai-powered-data-analyst-1.onrender.com/chat",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ prompt, data: dashSpec?.data }),
+        }
+      );
 
       const data = await res.json();
       console.log("data type", data.type);
