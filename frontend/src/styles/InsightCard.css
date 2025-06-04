@@ -2,70 +2,71 @@
   background: #ffffff;
   border: 1px solid #e5e7eb;
   border-radius: 12px;
-  padding: 1rem;
+  padding: 1.5rem;
   max-width: 1300px;
   min-width: 400px;
   margin-left: 1rem;
   transition: all 0.3s ease;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  transform-style: preserve-3d;
-  cursor: pointer;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
 }
 
 .insight-card:hover {
-  transform: perspective(800px) rotateX(3deg) rotateY(-3deg);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
 .insight-content {
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   color: #374151;
-  line-height: 1.4;
+  line-height: 1.5;
   max-height: 500px;
   overflow: auto;
+  padding: 0.5rem;
+  text-align: left;
 }
 
-/* Updated heading styles with more controlled sizing */
+/* Force all text elements to be left-aligned */
+.insight-content * {
+  text-align: left !important;
+}
+
+/* Clean heading styles with left alignment */
 .insight-heading {
-  text-decoration: underline;
   color: #2c3e50;
-  margin-bottom: 0.5rem;
-  text-align: center;
+  margin-bottom: 1rem;
+  text-align: left;
   width: 100%;
-  /* margin-left: 1rem; */
-  /* padding-bottom: 29px; */
 }
 
-/* Specific heading sizes */
+/* Specific heading sizes with consistent left alignment */
 .insight-content h1 {
-  padding-bottom: 20px;
-  margin-left: 1rem;
   font-size: 1.6rem;
+  margin-bottom: 1rem;
 }
 
 .insight-content h2 {
-  margin-left: 39rem;
-  padding-bottom: 29px;
-  font-size: 1rem;
+  font-size: 1.4rem;
+  margin-bottom: 0.8rem;
 }
 
 .insight-content h3 {
   font-size: 1.2rem;
+  margin-bottom: 0.7rem;
 }
 
 .insight-content h4,
 .insight-content h5,
 .insight-content h6 {
   font-size: 1rem;
+  margin-bottom: 0.6rem;
 }
 
 .insight-list-item {
   font-style: italic;
   margin-bottom: 0.5rem;
+  text-align: left;
 }
 
 .insight-bold {
@@ -78,12 +79,22 @@
 .insight-content ol {
   padding-left: 1.5rem;
   margin-bottom: 1rem;
+  text-align: left;
+}
+
+.insight-content li {
+  text-align: left;
 }
 
 .insight-content p {
   margin-bottom: 1rem;
+  text-align: left;
 }
-/* Add proper whitespace around markdown content */
-.insight-content {
-  padding: 0.5rem;
+
+/* Ensure all nested elements are left-aligned */
+.insight-content li p,
+.insight-content li span,
+.insight-content li strong,
+.insight-content li em {
+  text-align: left;
 }
